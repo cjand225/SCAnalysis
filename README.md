@@ -12,7 +12,8 @@ As well as the following packages w/ their version numbers.
         -numpy >= 1.15.4
         -matplotlib >= 2.2.3
         -PyQt5 >= 5.6.0
-        -opengl
+        -pyopengl >= 3.1.3
+        -pyqtgraph >= 0.10.0
         -pywin32 >= 1.0; platform_system == "Windows"
         -tesseract >= 0.1.3
 
