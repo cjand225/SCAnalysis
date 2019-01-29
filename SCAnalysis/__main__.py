@@ -1,8 +1,8 @@
-from PyQt5.Qt import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-import datetime
+from SCAnalysis.Application.App import App
+from SCAnalysis.Logging.LogWidget import LogWidget
+import os, sys
+from PyQt5.QtWidgets import QApplication
 
 if __name__ == "__main__":
-    print(datetime.datetime.now())
+    myApp = App()
+    myApp.run()

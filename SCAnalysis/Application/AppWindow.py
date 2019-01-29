@@ -7,3 +7,7 @@ from PyQt5.uic import loadUi
 class AppWindow():
     def __int__(self):
         self.window = None
+        self.initWindow()
+
+    def initWindow(self):
+        self.window = QMainWindow()

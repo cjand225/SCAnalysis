@@ -25,29 +25,13 @@ class LogWidget(QWidget):
         self.handlerAmount = len(self.filterTabNames)
         self.handlerList = [] * self.handlerAmount
 
-        # create tabs to use for handlers output
+        # create tabwidget and lists for dynamically creating handlers
         self.tabWidget = QTabWidget()
         self.tabsList = [] * self.handlerAmount
         self.tabLayouts = [] * self.handlerAmount
 
-        # iterate through the amount of possible filters for log and add to widget
-        for x in range(0, self.handlerAmount):
-            handler = QTextEditLogger(self)
-            handler.setFormatter(self.format)
-            handler.addFilter(self.filterList[x]())
-            self.log.addHandler(handler)
-
-            tab = QWidget()
-            self.tabWidget.addTab(tab, self.filterTabNames[x])
-            tabLayout = QGridLayout(tab)
-
-            tab.setLayout(tabLayout)
-            tabLayout.addWidget(handler.widget)
-
-            self.handlerList.append(handler)
-            self.tabsList.append(tab)
-            self.tabLayouts.append(tabLayout)
-
+        # create tabs, add to tabwidget, add tabwidget to logWidget
+        self.initTabs()
         self.ui.logLayout.addWidget(self.tabWidget)
         self.show()
 
@@ -62,6 +46,41 @@ class LogWidget(QWidget):
         self.ui = loadUi(self.UIPath, self)
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignBottom,
                                             self.size(), QApplication.desktop().availableGeometry()))
+
+    '''  
+        Function: setFormat
+        Parameters: self format
+        Return Value: N/A
+        Purpose: Changes the format in which log message records are displayed.
+    '''
+
+    def initTabs(self):
+        # iterate through the amount of possible filters for log and add to widget
+        for x in range(0, self.handlerAmount):
+            handler = QTextEditLogger(self)
+            handler.setFormatter(self.format)
+            handler.addFilter(self.filterList[x]())
+            self.log.addHandler(handler)
+
+            # create a tab and its layout, add it to the tab widget
+            tab = QWidget()
+            self.tabWidget.addTab(tab, self.filterTabNames[x])
+            tabLayout = QGridLayout(tab)
+
+            tab.setLayout(tabLayout)
+            tabLayout.addWidget(handler.widget)
+
+            # add the recently created objects to a list in case of need later.
+            self.handlerList.append(handler)
+            self.tabsList.append(tab)
+            self.tabLayouts.append(tabLayout)
+
+    '''  
+        Function: setFormat
+        Parameters: self format
+        Return Value: N/A
+        Purpose: Changes the format in which log message records are displayed.
+    '''
 
     def setFormat(self, format):
         self.format = format

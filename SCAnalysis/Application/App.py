@@ -8,6 +8,8 @@ Purpose: Controller for entire application, used to periodically update project 
 import os, sys
 from PyQt5.QtWidgets import QApplication
 
+from SCAnalysis.Application.AppWindow import AppWindow
+
 
 class App():
     def __init__(self):
@@ -15,13 +17,20 @@ class App():
         self.mainWindow = None
         self.running = False
 
-        self.graph = None
-
         # Initializing everything
         self.initApplication()
+        self.initMainWindow()
 
     def initApplication(self):
         self.Application = QApplication(sys.argv)
 
     def initMainWindow(self):
-        print("")
+        self.mainWindow = AppWindow()
+
+    def run(self):
+        self.running = True
+        self.Application.exec_()
+
+    def exit(self):
+        self.running = False
+        self.Application.exit(0)
