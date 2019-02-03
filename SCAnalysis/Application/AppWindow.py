@@ -4,10 +4,35 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QSt
 from PyQt5.uic import loadUi
 
 
-class AppWindow():
-    def __int__(self):
-        self.window = None
+class AppWindow(QMainWindow):
+
+    def __init__(self, uipath):
+        super(AppWindow, self).__init__()
+        # initialize Window
+        self.uiPath = uipath
+
         self.initWindow()
 
     def initWindow(self):
-        self.window = QMainWindow()
+        self.mainWindowUI = loadUi(self.uiPath, self)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignHCenter,
+                                            self.size(), QApplication.desktop().availableGeometry()))
+        self.show()
+
+    ''' 
+
+        Function: toggleWidget
+        Parameters: widget, e
+        Return Value: N/A
+        Purpose: static method that involves toggling any of the widgets bound to the main app window, allowing
+                 reduction of repetitious code for different widgets
+
+    '''
+
+    @staticmethod
+    def toggleWidget(widget, e):
+        if widget.isVisible():
+            widget.hide()
+        else:
+            widget.show()

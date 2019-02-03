@@ -1,5 +1,6 @@
 import os, csv
 
+import PIL
 '''  
     Function: makeDir
     Parameters: dirName
@@ -78,4 +79,24 @@ def exportImage(path, img):
 
 
 def importCSV(path):
-    print()
+    if fileExists(path):
+        csvList = []
+        with open(path, newline='') as csvFile:
+            csvReader = csv.reader(csvFile, delimiter=' ', quotechar='|')
+            for row in csvReader:
+                print(','.join(row))
+                csvList.append(row)
+        return csvList
+    else:
+        return None
+
+
+'''  
+    Function: isFileExtension
+    Parameters: path, extension (str, str)
+    Return Value: Boolean Condition
+    Purpose: Checks if a string/path has the correct file extension located in extensionList and returns boolean 
+             condition based on outcome.
+'''
+
+# def isFileExtension(path, extensionList):

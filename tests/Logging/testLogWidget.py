@@ -4,4 +4,13 @@ import unittest
 class testLogWidget(unittest.TestCase):
 
     def setUp(self):
-        print("")
+        pass
+
+    def testTabAmount(self):
+        pass
+
+    def testAddTab(self):
+        pass
+
+    def testAppend(self):
+        pass

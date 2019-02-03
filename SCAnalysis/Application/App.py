@@ -9,28 +9,26 @@ import os, sys
 from PyQt5.QtWidgets import QApplication
 
 from SCAnalysis.Application.AppWindow import AppWindow
+from SCAnalysis.Application import mainUIPath
 
 
-class App():
+class App(QApplication):
+
     def __init__(self):
-        self.Application = None
+        super(App, self).__init__(sys.argv)
         self.mainWindow = None
-        self.running = False
 
         # Initializing everything
         self.initApplication()
-        self.initMainWindow()
 
     def initApplication(self):
-        self.Application = QApplication(sys.argv)
+        self.initMainWindow()
 
     def initMainWindow(self):
-        self.mainWindow = AppWindow()
+        self.mainWindow = AppWindow(mainUIPath)
 
     def run(self):
-        self.running = True
-        self.Application.exec_()
+        self.exec_()
 
-    def exit(self):
-        self.running = False
-        self.Application.exit(0)
+    def bindWindowActions(self):
+        pass

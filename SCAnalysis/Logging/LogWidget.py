@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QStyle, QApplication, QPlainTextEdit, QTabW
 from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 
+from SCAnalysis.Logging import logDefaultFormat
 from SCAnalysis.Logging.Log import getLog
 from SCAnalysis.Logging.Filters import infoFilter, debugFilter, criticalFilter, warningFilter, errorFilter
 
@@ -11,7 +12,7 @@ from SCAnalysis.Logging.Filters import infoFilter, debugFilter, criticalFilter, 
 class LogWidget(QWidget):
 
     def __init__(self, uipath, parent=None):
-        super().__init__(parent)
+        super(LogWidget, self).__init__(parent)
         self.UIPath = uipath
 
         # create widget UI
@@ -19,13 +20,12 @@ class LogWidget(QWidget):
 
         # get log
         self.log = getLog(__name__)
-        self.format = logging.Formatter('[%(asctime)s] - [%(name)s] - [%(levelname)s] - %(message)s')
         self.filterList = [infoFilter, debugFilter, warningFilter, errorFilter, criticalFilter]
         self.filterTabNames = ['Info', 'Debug', 'Warning', 'Error', 'Critical']
         self.handlerAmount = len(self.filterTabNames)
         self.handlerList = [] * self.handlerAmount
 
-        # create tabwidget and lists for dynamically creating handlers
+        # create QTabWidget and lists for dynamically creating handlers
         self.tabWidget = QTabWidget()
         self.tabsList = [] * self.handlerAmount
         self.tabLayouts = [] * self.handlerAmount
@@ -58,7 +58,7 @@ class LogWidget(QWidget):
         # iterate through the amount of possible filters for log and add to widget
         for x in range(0, self.handlerAmount):
             handler = QTextEditLogger(self)
-            handler.setFormatter(self.format)
+            handler.setFormatter(logDefaultFormat)
             handler.addFilter(self.filterList[x]())
             self.log.addHandler(handler)
 
