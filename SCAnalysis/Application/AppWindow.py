@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QStyle
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QStyle, QLayout
 from PyQt5.uic import loadUi
 
 
@@ -10,8 +10,15 @@ class AppWindow(QMainWindow):
         super(AppWindow, self).__init__()
         # initialize Window
         self.uiPath = uipath
-
         self.initWindow()
+
+    '''
+        Function: initWindow
+        Parameters: self
+        Return Value: N/A
+        Purpose: Initializes the Main Window widget for the Application and displays it to user.
+        
+    '''
 
     def initWindow(self):
         self.mainWindowUI = loadUi(self.uiPath, self)
