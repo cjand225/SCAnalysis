@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QWidget, QStyle, QApplication, QPlainTextEdit, QTabW
 from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 
+from SCAnalysis import pkgName
+from SCAnalysis.Resources import logUIPath
 from SCAnalysis.Logging import logDefaultFormat
 from SCAnalysis.Logging.Log import getLog
 from SCAnalysis.Logging.Filters import infoFilter, debugFilter, criticalFilter, warningFilter, errorFilter
@@ -13,13 +15,13 @@ class LogWidget(QWidget):
 
     def __init__(self, uipath, parent=None):
         super(LogWidget, self).__init__(parent)
-        self.UIPath = uipath
+        self.UIPath = logUIPath
 
         # create widget UI
         self.initUI()
 
         # get log
-        self.log = getLog(__name__)
+        self.log = getLog(pkgName)
         self.filterList = [infoFilter, debugFilter, warningFilter, errorFilter, criticalFilter]
         self.filterTabNames = ['Info', 'Debug', 'Warning', 'Error', 'Critical']
         self.handlerAmount = len(self.filterTabNames)
@@ -33,13 +35,12 @@ class LogWidget(QWidget):
         # create tabs, add to tabwidget, add tabwidget to logWidget
         self.initTabs()
         self.ui.logLayout.addWidget(self.tabWidget)
-        self.show()
 
     '''  
         Function: initUI
         Parameters: self
         Return Value: N/A
-        Purpose: Initializes, Loads and Adds UI components to LogWidget.
+        Purpose: Initializes, Loads and Adds UI components to logWidget.
     '''
 
     def initUI(self):
@@ -83,7 +84,9 @@ class LogWidget(QWidget):
     '''
 
     def setFormat(self, format):
+        # sets the format within the logwidget class
         self.format = format
+        # sets format for every handler within the logwidget tabs
         for x in range(0, self.handlerAmount):
             self.handlerList[x].setFormatter(self.format)
 

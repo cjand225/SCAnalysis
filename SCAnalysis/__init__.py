@@ -1,5 +1,7 @@
-from SCAnalysis.Logging.Log import *
-from SCAnalysis.System.FileSystem import *
+from SCAnalysis.Logging.Log import initLog
+from SCAnalysis.System.FileSystem import dirExists, makeDir
+
+import logging, os
 
 pkgName = "SCAnalysis"
 logFile = pkgName + ".log"

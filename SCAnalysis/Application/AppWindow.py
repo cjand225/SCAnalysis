@@ -1,7 +1,16 @@
+'''
+Module: AppWindow.py
+Purpose: View for entire application, used as a means to convey information to and from user.
+
+'''
+
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QStyle, QLayout
 from PyQt5.uic import loadUi
+
+from SCAnalysis import pkgName
+from SCAnalysis.Logging.Log import getLog
 
 
 class AppWindow(QMainWindow):
@@ -10,6 +19,9 @@ class AppWindow(QMainWindow):
         super(AppWindow, self).__init__()
         # initialize Window
         self.uiPath = uipath
+        self.log = getLog(pkgName)
+        self.logWidget = None
+
         self.initWindow()
 
     '''
@@ -43,3 +55,10 @@ class AppWindow(QMainWindow):
             widget.hide()
         else:
             widget.show()
+
+    def connectActions(self):
+        if self.logWidget is not None:
+            self.actionLogs.triggered.connect(lambda e: type(self).toggleWidget(self.logWidget, e))
+
+    def addLogWidget(self, widget):
+        self.logWidget = widget

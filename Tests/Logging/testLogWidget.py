@@ -1,5 +1,7 @@
 import unittest
 
+from SCAnalysis.Logging.LogWidget import LogWidget
+
 
 class testLogWidget(unittest.TestCase):
 
