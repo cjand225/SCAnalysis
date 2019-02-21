@@ -1,4 +1,6 @@
-import os
+import os, csv
+
+from PIL import Image
 
 '''  
     Function: makeDir
@@ -46,7 +48,57 @@ def fileExists(path):
 '''
 
 
-def createFile(path, arg):
+def createFile(path, arg, data):
     if not fileExists(path):
         fp = open(path, arg)
+        for dataLine in data:
+            if arg == "w":
+                fp.write(dataLine)
+            else:
+                fp.read(dataLine)
         fp.close()
+
+
+'''  
+    Function: exportImage
+    Parameters: path (str), img (image file)
+    Return Value: Boolean Cond
+    Purpose: Exports a graph image from application to path given by user.
+'''
+
+
+def exportImage(path, img):
+    newImg = Image.fromarray(img)
+    newImg.save(path)
+
+
+'''  
+    Function: importCSV
+    Parameters: path (str)
+    Return Value: List with CSV contents
+    Purpose: Imports the file given by the path parameter of a CSV and returns it as a list.
+'''
+
+
+def importCSV(path):
+    if fileExists(path):
+        csvList = []
+        with open(path, newline='') as csvFile:
+            csvReader = csv.reader(csvFile, delimiter=' ', quotechar='|')
+            for row in csvReader:
+                print(','.join(row))
+                csvList.append(row)
+        return csvList
+    else:
+        return None
+
+
+'''  
+    Function: isFileExtension
+    Parameters: path, extension (str, str)
+    Return Value: Boolean Condition
+    Purpose: Checks if a string/path has the correct file extension located in extensionList and returns boolean 
+             condition based on outcome.
+'''
+
+# def isFileExtension(path, extensionList):

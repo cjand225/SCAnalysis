@@ -2,5 +2,9 @@ import unittest
 
 
 class testAppWindow(unittest.TestCase):
+
     def setUp(self):
-        print("")
+        pass
+
+    def testToggle(self):
+        pass
