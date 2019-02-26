@@ -4,13 +4,16 @@ Purpose: View for entire application, used as a means to convey information to a
 
 '''
 
+import os
+from pathlib import Path
+
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QStyle, QLayout
 from PyQt5.uic import loadUi
 
 from SCAnalysis import pkgName
-from SCAnalysis.Resources import quitDialogUIPath, helpDialogUIPath
+from SCAnalysis.Resources import quitDialogUIPath, helpDialogUIPath, aboutDocPath, adminDocPath, userDocPath
 from SCAnalysis.Logging.Log import getLog
 
 
@@ -38,11 +41,6 @@ class AppWindow(QMainWindow):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignHCenter,
                                             self.size(), QApplication.desktop().availableGeometry()))
-        # Initialize Dialogs
-        self.initFileDialog()
-        self.initHelpDialog(helpDialogUIPath)
-        self.initAboutDialog(helpDialogUIPath)
-        self.initCloseDialog(quitDialogUIPath)
         self.show()
 
     ''' 
@@ -71,8 +69,24 @@ class AppWindow(QMainWindow):
     '''
 
     def connectActions(self):
+
+        # File
+        self.actionNew.triggered.connect(self.newFile)
+        self.actionOpen.triggered.connect(self.openFile)
+        self.actionOpen_Directory.triggered.connect(self.openDirectory)
+        self.actionSave.triggered.connect(self.saveFile)
+        self.actionSave_As.triggered.connect(self.saveAsFile)
+        self.actionClose.triggered.connect(self.closeGraph)
+        self.actionExit.triggered.connect(self.close)
+
+        # View
         if self.logWidget is not None:
             self.actionLogs.triggered.connect(lambda e: type(self).toggleWidget(self.logWidget, e))
+
+        # help
+        self.actionAbout.triggered.connect(self.createAboutDialog)
+        self.actionUser_Manual.triggered.connect(self.createAdminDialog)
+        self.actionAdmin_Manual.triggered.connect(self.createUserDialog)
 
     ''' 
 
@@ -89,61 +103,6 @@ class AppWindow(QMainWindow):
 
     ''' 
 
-        Function: initFileDialog(self)
-        Parameters: self
-        Return Value: N/A
-        Purpose: Initializes a QFileDialog used primarily for getting input from the user on where they 
-                 would like to read or write a file. Needs to be called before openFileDialog, saveAsFileDialog,
-                 and saveFileDialog
-
-    '''
-
-    def initFileDialog(self):
-        self.fileDialog = QFileDialog(self)
-
-    '''
-
-        Function: initAboutDialog
-        Parameters: uiPath, filePath
-        Return Value: N/A
-        Purpose: Instances a QDialog given a filepath in UIpath parameter and a file containing data to display
-                 given by filePath, loads file into a text stream that then is set as html for the textbrowser
-                 built into the Dialog's ui file. If no file path is given, it'll just return none 
-
-    '''
-
-    def initAboutDialog(self, uiPath, filePath=None):
-        self.aboutDialog = QDialog()
-        self.aboutDialog.ui = loadUi(uiPath, self.aboutDialog)
-        if filePath is not None:
-            file = QFile(filePath)
-            file.open(QFile.ReadOnly | QFile.Text)
-            stream = QTextStream(file)
-            self.aboutDialog.ui.textBrowser.setHtml(stream.readAll())
-
-    '''
-
-        Function: initHelpDialog
-        Parameters: uiPath, filePath
-        Return Value: N/A
-        Purpose: Instances a QDialog given a filepath in UIpath parameter and a file containing data to display
-                 given by filePath, loads file into a text stream that then is set as html for the textbrowser
-                 built into the Dialog's ui file. If no file path is given, it'll just return none
-
-
-    '''
-
-    def initHelpDialog(self, uiPath, filePath=None):
-        self.helpDialog = QDialog()
-        self.helpDialog.ui = loadUi(uiPath, self.helpDialog)
-        if filePath is not None:
-            file = QFile(filePath)
-            file.open(QFile.ReadOnly | QFile.Text)
-            stream = QTextStream(file)
-            self.helpDialog.ui.textBrowser.setHtml(stream.readAll())
-
-    ''' 
-
         Function: openFileDialog(self)
         Parameters: self
         Return Value: fileName(String) or None
@@ -154,14 +113,11 @@ class AppWindow(QMainWindow):
     '''
 
     def openFileDialog(self):
-        filename = self.fileDialog.getOpenFileName(self, 'Open File')
-        if filename:
-            return filename[0]
-        else:
-            return None
+        fileDialog = QFileDialog()
+        return fileDialog.getOpenFileName(self, 'Open')
 
     ''' 
-        Function: saveAsFileDialog(self)
+        Function: saveFileDialog(self)
         Parameters: self
         Return Value: FileName(String) or None
         Purpose: Opens a fileDialog to get input from the user on where they would like to save
@@ -170,16 +126,9 @@ class AppWindow(QMainWindow):
                  file.
     '''
 
-    def saveAsFileDialog(self):
-        filename = self.fileDialog.getSaveFileName(self, 'Save File')
-        if filename != '':
-            return filename[0]
-        else:
-            return None
-
-    def initCloseDialog(self, uipath):
-        self.QuitMsg = QDialog()
-        self.QuitMsg.ui = loadUi(uipath, self.QuitMsg)
+    def saveFileDialog(self):
+        fileDialog = QFileDialog()
+        return fileDialog.getSaveFileName(self, 'Save As')
 
     ''' 
 
@@ -194,7 +143,7 @@ class AppWindow(QMainWindow):
     '''
 
     def closeEvent(self, a0: QCloseEvent):
-        retVal = self.QuitMsg.exec()  # grabs event code from Message box execution
+        retVal = self.createDecisionDialog(quitDialogUIPath)
         self.handleClose(retVal, a0)
 
     '''
@@ -226,11 +175,10 @@ class AppWindow(QMainWindow):
     def handleWidgetClosing(self):
         if self.logWidget is not None:
             self.logWidget.close()
-        self.close()
 
     '''
 
-        Function: handleAboutDialog
+        Function: createAboutDialog
         Parameters: self
         Return Value: N/A
         Purpose: Binds the buttonbox to the close event allowing the ok/close buttons to close the dialog
@@ -239,13 +187,12 @@ class AppWindow(QMainWindow):
 
     '''
 
-    def handleAboutDialog(self):
-        self.aboutDialog.ui.buttonBox.clicked.connect(self.aboutDialog.close)
-        self.aboutDialog.exec()
+    def createAboutDialog(self):
+        self.createBrowserDialog(helpDialogUIPath, aboutDocPath)
 
     '''
 
-        Function: handleHelpDialog
+        Function: createAdminDialog
         Parameters: self
         Return Value: N/A
         Purpose: Binds the buttonbox to the close event allowing the ok/close buttons to close the dialog
@@ -254,6 +201,130 @@ class AppWindow(QMainWindow):
 
     '''
 
-    def handleHelpDialog(self):
-        self.helpDialog.ui.buttonBox.clicked.connect(self.helpDialog.close)
-        self.helpDialog.exec()
+    def createAdminDialog(self):
+        self.createBrowserDialog(helpDialogUIPath, adminDocPath)
+
+    '''
+
+        Function: createUserDialog
+        Parameters: self
+        Return Value: N/A
+        Purpose: Binds the buttonbox to the close event allowing the ok/close buttons to close the dialog
+                 and then executes the dialog to displ  ay out to the user.
+
+
+    '''
+
+    def createUserDialog(self):
+        self.createBrowserDialog(helpDialogUIPath, userDocPath)
+
+    '''
+    
+        Function: createBrowserDialog
+        Parameters: self, uiPath, filePath
+        Return Value: return value of execution
+        Purpose: Creates a general purpose brower dialog used to load any document from a file, mostly used for easy
+                 streaming of manuals and other documention to the program itself.
+    '''
+
+    def createBrowserDialog(self, uiPath, filePath):
+        # create and loadui for QDialog instance
+        browserDialog = QDialog()
+        browserDialog.ui = loadUi(uiPath, browserDialog)
+        # if filePath is specified, create it, otherwise, return Rejected Enum
+        if os.path.isfile(filePath):
+            # open as a file stream
+            file = QFile(filePath)
+            file.open(QFile.ReadOnly | QFile.Text)
+            stream = QTextStream(file)
+            # direct stream as HTML, connect close button, execute and return value after close.
+            browserDialog.ui.textBrowser.setHtml(stream.readAll())
+            browserDialog.ui.buttonBox.clicked.connect(browserDialog.close)
+            return browserDialog.exec()
+        else:
+            return QDialog.Rejected
+
+    '''
+        Function: createDecisionDialog
+        Parameters: self, uiPath, filePath
+        Return Value: return value of execution
+        Purpose: creates a general purpose binary decision making Dialog that the user can load from ui file
+                 or choose to add programatically.
+    '''
+
+    def createDecisionDialog(self, uiPath):
+        decisionDialog = QDialog()
+        decisionDialog.ui = loadUi(uiPath, decisionDialog)
+        return decisionDialog.exec()
+
+    '''
+    
+        Function: newFile
+        Parameters: self
+        Return Value: N/A
+        Purpose: 
+        
+    '''
+
+    def newFile(self):
+        newLoc = QFileDialog().getSaveFileUrl(self, "New File", str(Path.home()))
+
+    '''
+
+        Function: openDirectory
+        Parameters: self
+        Return Value: str of chosen directory
+        Purpose:
+
+    '''
+
+    def openDirectory(self):
+        dirLoc = QFileDialog().getExistingDirectory(self, "Select Directory", str(Path.home()))
+
+    '''
+
+        Function: openFile
+        Parameters: self
+        Return Value: str of file location
+        Purpose:
+
+    '''
+
+    def openFile(self):
+        openLoc = QFileDialog().getOpenFileNames(self, "Open File", str(Path.home()))
+
+    '''
+
+        Function: saveAs
+        Parameters: self
+        Return Value: str of file location
+        Purpose:
+
+    '''
+
+    def saveFile(self):
+        saveLoc = QFileDialog().getSaveFileUrl(self, "Save File", str(Path.home()))
+
+    '''
+
+        Function: saveAsFile
+        Parameters: self
+        Return Value:str of file location
+        Purpose:
+
+    '''
+
+    def saveAsFile(self):
+        saveLoc = QFileDialog().getSaveFileUrl(self, "Save As File", str(Path.home()))
+
+    '''
+
+        Function: closeGraph
+        Parameters: self
+        Return Value: N/A
+        Purpose:
+
+    '''
+
+    def closeGraph(self):
+        pass
