@@ -1,4 +1,12 @@
-import csv
+"""
+
+Module: pdParsing.py
+Author: Kathryn Schantz
+Purpose: Module for parsing particular csv files into pandas and passed as a series of figures, after being plotted
+         by plot.py module, to the graph controller module.
+
+"""
+
 import pandas as pd
 
 """ 

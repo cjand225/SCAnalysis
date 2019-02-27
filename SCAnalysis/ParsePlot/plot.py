@@ -1,3 +1,11 @@
+"""
+
+Module: plot.py
+Author: Kathryn Schantz
+Purpose: Series of functions that takes data parsed from csv and plots the graphs and returns the resulting figure.
+
+"""
+
 from SCAnalysis.ParsePlot import pdParsing as parse
 import matplotlib.pyplot as plt
 import numpy as np
