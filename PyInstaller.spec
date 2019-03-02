@@ -5,10 +5,10 @@
 block_cipher = None
 
 import os
-resource_path = os.path.abspath("./SCAnalysis/Resources/UI/*.ui")
+resource_path = os.path.abspath("./SCAnalysis/Resources/*")
 script_path = os.path.abspath("./SCAnalysis/__main__.py")
 project_path = os.path.abspath(".")
-dist_path = os.path.join("./SCAnalysis/resources/")
+dist_path = os.path.join("./SCAnalysis/Resources/UI/")
 
 a = Analysis([script_path],
              pathex=[project_path],
@@ -28,7 +28,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='SCT',
+          name='SCA',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -40,4 +40,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='SCTimeUtility')
+               name='SCA')
