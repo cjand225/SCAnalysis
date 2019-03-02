@@ -1,13 +1,12 @@
 '''
 
-    Individual Widget to store graph in as a pixmap type object
+    Individual Widget to store Figure within a figure canvas on itself.
 
 '''
 
 import random
 from PyQt5.Qt import QWidget, QPushButton, QVBoxLayout
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
@@ -17,21 +16,36 @@ from SCAnalysis.Logging.Log import getLog
 
 class Graph(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, graphFigure=None, parent=None):
         super(Graph, self).__init__(parent)
 
         self.log = getLog(pkgName)
 
-        self.figure = Figure()
+        self.figure = None
+        if graphFigure is None:
+            self.figure = Figure()
+            self.title = ''
+        else:
+            self.figure = graphFigure
+            self.title = self.figure.get_axes()[0].get_title()
+
         self.canvas = FigureCanvas(self.figure)
-        self.toolbar = NavigationToolbar(self.canvas, self)
-        self.title = ''
+        self.figure.tight_layout()
 
         # set the layout
         layout = QVBoxLayout()
         layout.addWidget(self.canvas)
         self.setLayout(layout)
-        self.plot()
+        # self.canvas.draw()
+
+    '''
+
+        Function:
+        Parameters:
+        Return Value:
+        Purpose:
+
+    '''
 
     def plot(self):
         # clear plot if its already been populated
@@ -51,23 +65,63 @@ class Graph(QWidget):
         # refresh canvas
         self.canvas.draw()
 
-    def editTitle(self, title):
-        self.title = title
+    '''
 
-    def editAxisX(self, xTitle):
-        self.axisTitleX = xTitle
+        Function: createFigure
+        Parameters: self
+        Return Value: N/A
+        Purpose:
 
-    def editAxisY(self, yTitle):
-        self.axisTitleY = yTitle
+    '''
 
-    def editAxisScaleX(self, scale):
-        self.scaleValueX = scale
+    def createFigure(self):
+        pass
 
-    def editAxisScaleY(self, scale):
-        self.scaleValueY = scale
+    '''
 
-    def saveFigure(self, path):
-        self.figure.savefig(path)
+        Function: setFigure
+        Parameters: self, figure
+        Return Value: N/A
+        Purpose:
 
-    def zoom(self):
+    '''
+
+    def setFigure(self, figure):
+        self.canvas.figure = figure
+        self.canvas.draw()
+
+    '''
+
+        Function: getFigure
+        Parameters: self
+        Return Value: self.figure (Figure from matplotlib.figure)
+        Purpose:
+
+    '''
+
+    def getFigure(self):
+        return self.figure
+
+    '''
+
+        Function: getCanvas
+        Parameters: self
+        Return Value: FigureCanvasQTAgg
+        Purpose:
+
+    '''
+
+    def getCanvas(self):
+        return self.canvas
+
+    '''
+
+        Function: updateFigure
+        Parameters: self, data
+        Return Value: N/A
+        Purpose:
+
+    '''
+
+    def updateFigure(self, data):
         pass
