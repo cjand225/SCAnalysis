@@ -26,10 +26,10 @@ def unix_to_dt(unix_times):
     return dateT
 
 
-def speed_time():
+def speed_time(path):
     fig = plt.figure()
 
-    data = parse.parse()
+    data = parse.parse(path)
     motorA = data['mtA']
     motorB = data['mtB']
 
@@ -38,7 +38,7 @@ def speed_time():
     speedA = np.array(motorA['S'])
     speedB = np.array(motorB['S'])
 
-    ax = fig.add_subplot()
+    ax = fig.add_subplot(1, 1, 1)
     ax.plot(timeA, speedA, 'r', timeB, speedB, 'b')
     ax.set_xlabel('Time')
     ax.set_ylabel('Speed')
@@ -64,10 +64,10 @@ def speed_time():
 
 #    return fig
 
-def voltage_time():
+def voltage_time(path):
     fig = plt.figure()
 
-    data = parse.parse()
+    data = parse.parse(path)
     battery = data['bat_v']
 
     time = np.array(unix_to_dt(battery['pc_time']))
@@ -75,8 +75,8 @@ def voltage_time():
     voltage_low = np.array(battery['min'])
     voltage_avg = np.array(battery['avg'])
 
-    ax = fig.add_subplot()
-    ax.plot(time, voltage_high, 'r', time, voltage_low, 'b', voltage_avg, 'k')
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(time, voltage_high, 'r', time, voltage_low, 'b', time, voltage_avg, 'k')
     ax.set_xlabel('Time')
     ax.set_ylabel('Voltage')
     ax.set_title('Voltage vs Time')
@@ -84,10 +84,10 @@ def voltage_time():
     return fig
 
 
-def motor_current_time():
+def motor_current_time(path):
     fig = plt.figure()
 
-    data = parse.parse()
+    data = parse.parse(path)
     motorA = data['mtA']
     motorB = data['mtB']
 
@@ -96,7 +96,7 @@ def motor_current_time():
     currentA = np.array(motorA['I'])
     currentB = np.array(motorB['I'])
 
-    ax = fig.add_subplot()
+    ax = fig.add_subplot(1, 1, 1)
     ax.plot(timeA, currentA, 'r', timeB, currentB, 'b')
     ax.set_xlabel('Time')
     ax.set_ylabel('Motor Current')
@@ -122,10 +122,10 @@ def motor_current_time():
 
 #    return fig
 
-def motor_temp_time():
+def motor_temp_time(path):
     fig = plt.figure()
 
-    data = parse.parse()
+    data = parse.parse(path)
     motorA = data['mtA_t']
     motorB = data['mtB_t']
 
@@ -134,7 +134,7 @@ def motor_temp_time():
     tempA = np.array(motorA['MT'])
     tempB = np.array(motorB['MT'])
 
-    ax = fig.add_subplot()
+    ax = fig.add_subplot(1, 1, 1)
     ax.plot(timeA, tempA, 'r', timeB, tempB, 'b')
     ax.set_xlabel('Time')
     ax.set_ylabel('Temperature')
@@ -143,19 +143,19 @@ def motor_temp_time():
     return fig
 
 
-def battery_temp_time():
+def battery_temp_time(path):
     fig = plt.figure()
 
-    data = parse.parse()
+    data = parse.parse(path)
     bat = data['bat_t']
 
-    time = np.array(unix_to_dt(bat['time']))
+    time = np.array(unix_to_dt(bat['pc_time']))
     temp_high = np.array(bat['max'])
     temp_low = np.array(bat['min'])
     temp_avg = np.array(bat['avg'])
 
-    ax = fig.add_subplot()
-    ax.plot(time, temp_high, 'r', time, temp_low, 'b', temp_avg, 'k')
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(time, temp_high, 'r', time, temp_low, 'b', time, temp_avg, 'k')
     ax.set_xlabel('Time')
     ax.set_ylabel('Temperature')
     ax.set_title('Battery vs Time')

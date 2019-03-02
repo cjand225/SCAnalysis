@@ -6,7 +6,7 @@ Purpose: Module for parsing particular csv files into pandas and passed as a ser
          by plot.py module, to the graph controller module.
 
 """
-
+import os
 import pandas as pd
 
 """ 
@@ -37,7 +37,7 @@ gps: GPS data
 """
 
 
-def parse():
+def parse(path):
     # dictionary of csvs with dictionaries inside
     # 'mtA', 'mtB', 'mtA_t', 'mtB_t', 'bat', 'bat_t', 'gps'
     csvs = {}
@@ -45,7 +45,8 @@ def parse():
     file_names = {'mtA', 'mtB', 'mtA_t', 'mtB_t', 'bat_v', 'bat_t', 'gps'}
 
     for file in file_names:
-        df = pd.read_csv('./real_data/' + file + '.csv')
+        df = pd.read_csv(os.path.abspath(os.path.join(path, file + '.csv')))
+        # df = pd.read_csv('./real_data/' + file + '.csv')
         csvs[file] = df.to_dict(orient='list')
 
     return csvs
