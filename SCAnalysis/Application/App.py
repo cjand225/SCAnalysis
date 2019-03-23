@@ -56,3 +56,4 @@ class App(QApplication):
         self.mainWindow.setCentralWidget(self.GraphMod)
         self.mainWindow.addLogWidget(self.logWidget)
         self.mainWindow.connectActions()
+

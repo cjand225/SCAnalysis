@@ -5,25 +5,41 @@
 
 """
 
-from PyQt5.QtWidgets import QWidget, QDockWidget
+from PyQt5.QtWidgets import QWidget, QToolBox, QToolButton, QGridLayout, QToolBar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from PyQt5.uic import loadUi
 
-from SCAnalysis.Graph.GraphTypes import GraphTypes
 from SCAnalysis.Logging.Log import getLog
 
 
-class GraphSettings(QDockWidget):
+class GraphSettings(QToolBox):
 
-    def __init__(self, path, figure, parent=None):
+    def __init__(self, figure, canvas, parent=None):
         super(GraphSettings, self).__init__(parent)
-        self.uiPath = path
         self.figReference = figure
+        self.navBar = NavigationToolbar(canvas, parent)
+        self.insertItem(0, self.navBar, "Nav")
 
-        self.initUI()
+    '''
+
+        Function: initUI
+        Parameters: self
+        Return Value: N/A
+        Purpose:
+
+    '''
 
     def initUI(self):
-        self.settingsUi = loadUi(self.uiPath)
+        pass
+
+    '''
+
+        Function: connectActions
+        Parameters: self
+        Return Value: N/A
+        Purpose:
+
+    '''
 
     def connectActions(self):
         pass
-

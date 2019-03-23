@@ -1,5 +1,5 @@
-recursive-include Docs *
 recursive-include Resources *
+include SCAnalysis/Resources/Docs/*
 include SCAnalysis/Resources/Icons/*
 include SCAnalysis/Resources/UI/*.ui
 global-exclude .gitignore
