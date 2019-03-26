@@ -105,22 +105,23 @@ def motor_current_time(path):
     return fig
 
 
-# def battery_current_time():
-#    fig = plt.figure()
+def battery_current_time():
+    fig = plt.figure()
 
-#    data = parse.parse()
-#    bat = data['bat']
+    data = parse.parse()
+    curr = data['curr']
 
-#    time = np.array(unix_to_dt(bat['time']))
-#    current = np.array(bat['current'])
+    time = np.array(unix_to_dt(curr['pc_time']))
+    current = np.array(curr['val'])
 
-#    ax = fig.add_subplot()
-#    ax.plot(time, current, 'k')
-#    ax.set_xlabel('Time')
-#    ax.set_ylabel('Battery Current')
-#    ax.set_title('Battery Current vs Time')
+    ax = fig.add_subplot()
+    ax.plot(time, current, 'k')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Battery Current')
+    ax.set_title('Battery Current vs Time')
 
-#    return fig
+    return fig
+
 
 def motor_temp_time(path):
     fig = plt.figure()

@@ -16,7 +16,8 @@ from SCAnalysis.Graph.GraphTab import GraphTab
 from SCAnalysis.Graph.GraphSettings import GraphSettings
 from SCAnalysis.Graph.GraphTabBar import GraphTabBar
 from SCAnalysis.Logging.Log import getLog
-from SCAnalysis.ParsePlot.plot import speed_time, voltage_time, motor_current_time, motor_temp_time, battery_temp_time
+from SCAnalysis.ParsePlot.plot import speed_time, voltage_time, motor_current_time, motor_temp_time, battery_temp_time, \
+    battery_current_time
 
 
 class GraphController(QWidget):
@@ -24,7 +25,8 @@ class GraphController(QWidget):
     def __init__(self, parent=None):
         super(GraphController, self).__init__(parent)
 
-        self.parsePlotList = [speed_time, voltage_time, motor_current_time, motor_temp_time, battery_temp_time]
+        self.parsePlotList = [speed_time, voltage_time, motor_current_time, motor_temp_time, battery_temp_time,
+                              battery_current_time]
         self.GraphTabWidget = None
         self.graphCount = 0
         self.maxGraphCount = 20

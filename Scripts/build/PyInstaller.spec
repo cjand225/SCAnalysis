@@ -5,10 +5,10 @@
 block_cipher = None
 
 import os
-resource_path = os.path.abspath("./SCAnalysis/Resources/*")
-script_path = os.path.abspath("./SCAnalysis/__main__.py")
-project_path = os.path.abspath(".")
-dist_path = os.path.join("./SCAnalysis/Resources/UI/")
+resource_path = os.path.abspath(os.path.join(".","..", "..", "SCAnalysis", "Resources", "*"))
+script_path = os.path.abspath(os.path.join(".", "..","..","SCAnalysis", "__main__.py"))
+project_path = os.path.abspath(os.path.join(".", "..", "..", "bin"))
+dist_path = os.path.join(".", "SCAnalysis", "Resources", "UI")
 
 a = Analysis([script_path],
              pathex=[project_path],
@@ -40,4 +40,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='SCA')
+               name='SCAnalysis')

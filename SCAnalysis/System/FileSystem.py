@@ -1,6 +1,6 @@
 import os, csv
 
-from PIL import Image
+
 
 '''  
     Function: makeDir

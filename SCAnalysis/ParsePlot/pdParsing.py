@@ -42,7 +42,7 @@ def parse(path):
     # 'mtA', 'mtB', 'mtA_t', 'mtB_t', 'bat', 'bat_t', 'gps'
     csvs = {}
 
-    file_names = {'mtA', 'mtB', 'mtA_t', 'mtB_t', 'bat_v', 'bat_t', 'gps'}
+    file_names = {'mtA', 'mtB', 'mtA_t', 'mtB_t', 'bat_v', 'bat_t', 'gps', 'curr'}
 
     for file in file_names:
         df = pd.read_csv(os.path.abspath(os.path.join(path, file + '.csv')))
