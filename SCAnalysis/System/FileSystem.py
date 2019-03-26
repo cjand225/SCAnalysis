@@ -68,8 +68,7 @@ def createFile(path, arg, data):
 
 
 def exportImage(path, img):
-    newImg = Image.fromarray(img)
-    newImg.save(path)
+    pass
 
 
 '''  

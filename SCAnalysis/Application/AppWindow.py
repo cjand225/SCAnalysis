@@ -39,7 +39,7 @@ class AppWindow(QMainWindow):
     def initWindow(self):
         self.mainWindowUI = loadUi(self.uiPath, self)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignHCenter,
+        self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignCenter,
                                             self.size(), QApplication.desktop().availableGeometry()))
         self.show()
 
